@@ -29,6 +29,7 @@ export default function Header() {
   }, [open]);
 
   return (
+    <>
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 h-[var(--header-h)] border-b transition-colors duration-300",
@@ -91,6 +92,7 @@ export default function Header() {
           </button>
         </div>
       </div>
+    </header>
 
       <AnimatePresence>
         {open && (
@@ -135,6 +137,6 @@ export default function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
