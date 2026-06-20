@@ -461,6 +461,10 @@ export const clients: Client[] = [
   { name: "SKIN", url: "https://skin-nn.ru/" },
   { name: "ВГУВТ", url: "https://vsuwt.ru/", logo: "/clients/vsuwt.svg" },
   { name: "ГСК ПРАКТИК" },
+  { name: "PASASH", url: "https://pa-sash.com/" },
+  { name: "Dr. Barinova", url: "https://www.drbarinova.com/" },
+  { name: "Love Forum", url: "https://loveforumnn.ru/" },
+  { name: "Dr. Krupinova", url: "https://dr-krupinova.ru/" },
 ];
 
 /** Призёры хакатонов от этих компаний (раньше стояли в «Нам доверяют»). */

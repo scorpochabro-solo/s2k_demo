@@ -71,6 +71,10 @@ export default function TechStack() {
                       BY KSENIA BARINOVA
                     </span>
                   </span>
+                ) : c.name === "PASASH" ? (
+                  <span className="font-display text-xl font-light tracking-[0.35em] text-fg md:text-2xl">
+                    PASASH
+                  </span>
                 ) : (
                   <span className="text-center font-display text-lg font-medium tracking-tight text-fg md:text-xl">
                     {c.name}
