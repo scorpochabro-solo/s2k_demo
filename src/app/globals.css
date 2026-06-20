@@ -1,0 +1,412 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  S2K «ТРАССИРОВКА» — дизайн-токены                                  */
+/*  Тёмное поле, инженерная сетка, сигнальный оранжевый, магистраль.   */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  /* Палитра */
+  --color-bg: #121212; /* основной фон — тёплый графит */
+  --color-bg-elevated: #1a1a18; /* секции-подложки */
+  --color-fg: #f2f0eb; /* основной текст — тёплый белый */
+  --color-muted: #8c8a84; /* вторичный текст, техподписи */
+  --color-line: #2e2d2a; /* оси, разделители, рамки 1px */
+  --color-accent: #ff4d00; /* сигнальный оранжевый — крупная типографика/трасса/заливки */
+  --color-accent-soft: #ff6a2b; /* мелкий оранжевый текст (контраст ≥ 4.5:1) */
+  --color-accent-ink: #b53800; /* оранжевый для светлых инверсных секций */
+  --color-paper: #f2f0eb; /* бумага для инверсных секций */
+  --color-paper-ink: #1a1a18; /* текст на бумаге */
+
+  /* Типографика */
+  --font-display: var(--font-geologica), "Geologica", system-ui, sans-serif;
+  --font-sans: var(--font-onest), "Onest", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, monospace;
+
+  /* Кривые и длительности */
+  --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Контейнер */
+  --spacing-gutter: clamp(1.25rem, 4vw, 4rem);
+}
+
+:root {
+  --dur-1: 0.3s;
+  --dur-2: 0.6s;
+  --dur-3: 0.9s;
+  --dur-4: 1.2s;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --header-h: 72px;
+  /* Магистраль */
+  --trace-future: var(--color-line);
+  --trace-active: var(--color-accent);
+}
+
+/* ------------------------------------------------------------------ */
+/*  База                                                               */
+/* ------------------------------------------------------------------ */
+
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  background-color: var(--color-bg);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Lenis ведёт скролл — нативный smooth отключаем, чтобы не конфликтовал */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* Деликатный grain — «свет из контента», не из интерфейса */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Видимый фокус для доступности */
+:focus-visible {
+  outline: 2px solid var(--color-accent-soft);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Типографические утилиты */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Контейнер с инженерными полями */
+.shell {
+  width: 100%;
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Контурная «водяная» цифра — для крупных номеров секций */
+.outline-num {
+  -webkit-text-stroke: 1px var(--color-line);
+  color: transparent;
+}
+
+/* Маркер-засечка моноширинного штампа */
+.tech-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Hero LCP-reveal — чистые CSS keyframes (НЕ через JS/observer)      */
+/* ------------------------------------------------------------------ */
+
+@keyframes line-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-line {
+  display: block;
+  overflow: hidden;
+}
+.reveal-line > span {
+  display: block;
+  transform: translateY(110%);
+  animation: line-rise var(--dur-3) var(--ease) both;
+}
+.reveal-fade {
+  opacity: 0;
+  animation: fade-rise var(--dur-2) var(--ease) both;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Магистраль — состояния сегментов                                  */
+/* ------------------------------------------------------------------ */
+
+.trace-path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Marquee                                                            */
+/* ------------------------------------------------------------------ */
+
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  will-change: transform;
+  animation: marquee-x var(--marquee-dur, 50s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reduced motion — линия статична, без рисования/glow/marquee        */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-line > span {
+    transform: none;
+  }
+  .reveal-fade {
+    opacity: 1;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Осевая шина — токен бело-горячей головы + ambient-дыхание (Hero)   */
+/* ------------------------------------------------------------------ */
+
+:root {
+  /* Бело-горячий цвет головы импульса (ярчайшая, мельчайшая движущаяся точка). */
+  --head: #fff3ec;
+}
+
+/* Hero: голова «дышит» при scroll 0 — сайт ощущается «включённым» на первом кадре. */
+@keyframes trace-head-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.trace-head-ambient {
+  opacity: 1;
+  animation: trace-head-breathe 2.4s var(--ease, ease-in-out) infinite;
+}
+
+/* Reduced-motion: дыхание выключено, голова статично-зажжена. */
+@media (prefers-reduced-motion: reduce) {
+  .trace-head-ambient {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Осевая шина v3 — НЕПРЕРЫВНЫЙ ток (CSS owns strokeDashoffset)        */
+/*  Пакет всегда едет ВНИЗ (offset 1→0 = верх→низ, т.к. пути M..0→L..1000). */
+/*  Линейный easing = «течение тока», а не «брошенный мяч».            */
+/* ------------------------------------------------------------------ */
+
+@keyframes trace-flow {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.trace-flow {
+  animation: trace-flow var(--flow-dur, 3.2s) linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Узел-пайка — вспышка перетактована на CSS-ток (без чтения скролла) */
+/*  Период/фаза заперты на голову пакета (--flow-dur/--flow-delay).    */
+/*  Анимируем напрямую только меняющиеся свойства: фон/рамка/тень.     */
+/* ------------------------------------------------------------------ */
+
+@keyframes trace-node-flash {
+  /* Пик — в начале цикла (совпадает с проходом головы через PAD_Y). */
+  0% {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 14px rgba(255, 106, 43, 0.6);
+  }
+  /* Спад к OFF (графитовая рамка, нет заливки/тени) — line-узлы в покое. */
+  22%,
+  100% {
+    background-color: rgba(255, 77, 0, 0);
+    border-color: var(--color-line);
+    box-shadow: 0 0 0 rgba(255, 77, 0, 0);
+  }
+}
+
+/* Accent-узлы (не терминал): тот же проход, но оседают «зажжёнными». */
+@keyframes trace-node-flash-accent {
+  0% {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 14px rgba(255, 106, 43, 0.6);
+  }
+  22%,
+  100% {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 4px rgba(255, 77, 0, 0.35);
+  }
+}
+
+.trace-node-flash {
+  background-color: rgba(255, 77, 0, 0);
+  border-color: var(--color-line);
+  animation: trace-node-flash var(--flow-dur, 3.2s) linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+  will-change: box-shadow, background-color, border-color;
+}
+
+.trace-node-flash--accent {
+  animation-name: trace-node-flash-accent;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Терминал-маяк (Contact) — постоянно зажжён + медленное «дыхание».  */
+/*  Читается «живой / прибыли сюда», а не «застрял».                  */
+/* ------------------------------------------------------------------ */
+
+@keyframes trace-beacon {
+  0%,
+  100% {
+    box-shadow: 0 0 6px rgba(255, 106, 43, 0.6);
+    opacity: 0.7;
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(255, 106, 43, 0.85);
+    opacity: 1;
+  }
+}
+
+.trace-beacon {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  animation: trace-beacon 2.6s var(--ease, ease-in-out) infinite;
+  will-change: box-shadow, opacity;
+}
+
+/* Подпись узла, осевшая «зажжённой» (accent/терминал). */
+.trace-label-lit {
+  color: var(--color-fg);
+}
+
+/* ------------------------------------------------------------------ */
+/*  CTA-заряд — раз за цикл тока у первичной кнопки (Hero/Contact).    */
+/*  Низкоамплитудная вспышка accent-кольца ~ внутри --flow-dur.        */
+/*  Кнопка опционально подключается классом .trace-cta-charge.        */
+/* ------------------------------------------------------------------ */
+
+@keyframes trace-cta-charge {
+  0%,
+  92%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 77, 0, 0);
+  }
+  96% {
+    box-shadow: 0 0 0 3px rgba(255, 77, 0, 0.35);
+  }
+}
+
+.trace-cta-charge {
+  animation: trace-cta-charge var(--flow-dur, 3.2s) linear infinite;
+  animation-delay: var(--flow-delay, 0s);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reduced-motion — заморозить непрерывный ток в зажжённый end-state. */
+/*  Глобальный media-блок выше уже бьёт duration/iteration; добавляем  */
+/*  явный freeze для новых классов (стабильное разрешённое состояние). */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .trace-flow {
+    animation: none;
+    /* Замираем в полном проходе: пакет «прибыл» в низ, ток виден статикой. */
+    stroke-dashoffset: 0;
+  }
+  .trace-node-flash,
+  .trace-node-flash--accent {
+    animation: none;
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 4px rgba(255, 77, 0, 0.35);
+  }
+  .trace-beacon {
+    animation: none;
+    box-shadow: 0 0 12px rgba(255, 106, 43, 0.6);
+    opacity: 1;
+  }
+  .trace-cta-charge {
+    animation: none;
+    box-shadow: 0 0 0 2px rgba(255, 77, 0, 0.18);
+  }
+}
