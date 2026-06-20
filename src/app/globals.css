@@ -161,6 +161,10 @@ body::after {
 .reveal-line {
   display: block;
   overflow: hidden;
+  /* leading 0.95 + overflow:hidden срезал хвосты «у»/descenders — даём клип-боксу
+     место снизу, негативный margin держит межстрочный интервал прежним. */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
 }
 .reveal-line > span {
   display: block;
