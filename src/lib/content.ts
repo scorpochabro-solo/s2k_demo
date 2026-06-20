@@ -449,17 +449,33 @@ export const allCases: PortfolioItem[] = [...products, ...projects];
 /* Клиенты                                                             */
 /* ------------------------------------------------------------------ */
 
-export type Client = { name: string; sector: string };
+export type Client = { name: string; url?: string; logo?: string };
 
-export const clientsSection = { heading: "Нам доверяют" };
+export const clientsSection = {
+  heading: "Нам доверяют",
+  subheading: "Компании и проекты, которые мы запустили или поддерживаем.",
+};
 
 export const clients: Client[] = [
-  { name: "Sber", sector: "Финтех" },
-  { name: "T1", sector: "IT-холдинг" },
-  { name: "ТНС Энерго", sector: "Энергетика" },
-  { name: "АЦГ НН", sector: "Консалтинг" },
-  { name: "MTS", sector: "Телеком" },
-  { name: "Wildberries", sector: "E-commerce" },
+  { name: "Hampton by Hilton", url: "http://hampton-nn-birthday.ru/", logo: "/clients/hampton.svg" },
+  { name: "SKIN", url: "https://skin-nn.ru/" },
+  { name: "ВГУВТ", url: "https://vsuwt.ru/", logo: "/clients/vsuwt.svg" },
+  { name: "ГСК ПРАКТИК" },
+];
+
+/** Призёры хакатонов от этих компаний (раньше стояли в «Нам доверяют»). */
+export const hackathonsSection = {
+  heading: "Призёры хакатонов",
+  subheading: "Берём призовые места на хакатонах от ведущих компаний.",
+};
+
+export const hackathons: string[] = [
+  "Сбер",
+  "Т1",
+  "ТНС Энерго",
+  "МТС",
+  "Wildberries",
+  "АЦГ НН",
 ];
 
 /* ------------------------------------------------------------------ */
