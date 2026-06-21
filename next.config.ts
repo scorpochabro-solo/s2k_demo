@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
   // ponytail: unoptimized next/image НЕ префиксует basePath к public-файлам —
   // отдаём его в клиент для обычного <img src> у логотипов клиентов.
   env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  // Инлайн критического CSS — убирает render-blocking <link>, ускоряет FCP/LCP.
+  experimental: { inlineCss: true },
 };
 
 export default nextConfig;

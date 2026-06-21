@@ -6,8 +6,7 @@ import { metadataBase, organizationLd, websiteLd, JsonLd } from "@/lib/seo";
 import SmoothScroll from "@/components/SmoothScroll";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Preloader from "@/components/Preloader";
-import Cursor from "@/components/Cursor";
+import DeferredChrome from "@/components/DeferredChrome";
 
 const geologica = Geologica({
   subsets: ["latin", "cyrillic"],
@@ -70,8 +69,7 @@ export default function RootLayout({
         >
           К основному содержанию
         </a>
-        <Preloader />
-        <Cursor />
+        <DeferredChrome />
         <Header />
         <SmoothScroll>
           <main id="main">{children}</main>

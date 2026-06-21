@@ -45,9 +45,18 @@ export default async function LandingPage({
             name: l.h1,
             serviceType: l.breadcrumb,
             provider: { "@id": `${site.url}/#organization` },
-            areaServed: "RU",
+            areaServed: { "@type": "Country", name: "Россия" },
             description: l.meta.description,
             url: `${site.url}/${l.slug}`,
+            inLanguage: "ru-RU",
+            hasOfferCatalog: {
+              "@type": "OfferCatalog",
+              name: l.breadcrumb,
+              itemListElement: l.bullets.map((b) => ({
+                "@type": "Offer",
+                itemOffered: { "@type": "Service", name: b },
+              })),
+            },
           },
           {
             "@context": "https://schema.org",

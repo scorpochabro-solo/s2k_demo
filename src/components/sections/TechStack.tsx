@@ -60,6 +60,8 @@ export default function TechStack() {
                   <img
                     src={`${BASE}${c.logo}`}
                     alt={c.name}
+                    loading="lazy"
+                    decoding="async"
                     className="max-h-10 w-full object-contain opacity-90 transition-opacity duration-300 group-hover:opacity-100 md:max-h-12"
                   />
                 ) : c.name === "SKIN" ? (

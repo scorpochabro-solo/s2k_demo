@@ -14,9 +14,11 @@ export function pageMeta({
   path?: string;
 }): Metadata {
   const url = new URL(path, site.url).toString();
+  // Шаблон layout добавляет « | S2K Studio» — срезаем зашитый бренд, чтобы тайтл не дублировался.
+  const cleanTitle = title.replace(/\s*\|\s*S2K Studio\s*$/i, "");
   // og-картинку отдаёт файловая конвенция opengraph-image (корневая, наследуется).
   return {
-    title,
+    title: cleanTitle,
     description,
     alternates: { canonical: url },
     openGraph: {
