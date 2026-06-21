@@ -72,7 +72,7 @@ export default function Footer() {
 
       <div className="shell flex flex-col gap-4 border-t border-line py-8 font-mono text-xs text-muted md:flex-row md:items-center md:justify-between">
         <span>{footer.copyright}</span>
-        <span className="max-w-xl text-[10px] leading-relaxed opacity-70">{site.metaNote}</span>
+        <span className="max-w-xl text-[10px] leading-relaxed">{site.metaNote}</span>
         <Link href={footer.privacy.href} className="transition-colors hover:text-fg">
           {footer.privacy.label}
         </Link>

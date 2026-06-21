@@ -11,7 +11,9 @@ import DeferredChrome from "@/components/DeferredChrome";
 const geologica = Geologica({
   subsets: ["latin", "cyrillic"],
   variable: "--font-geologica",
-  display: "swap",
+  // optional (не swap): предзагружен и обычно успевает на HTTP/2, но если нет —
+  // остаётся fallback без позднего свопа → нулевой CLS на крупном hero-заголовке.
+  display: "optional",
   preload: true,
 });
 const onest = Onest({
